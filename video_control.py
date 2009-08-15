@@ -11,7 +11,12 @@ import pygst
 pygst.require("0.10")
 import gst
 
+from ctypes import *
+from os.path import exists
+
 #STATUS: Servidor RPC para controlar VLC en holofonor con multiclientes 
+
+import zipfile
 
 class MediatecaServer(Thread):
   ''' little rpc server for controlling
@@ -21,7 +26,7 @@ class MediatecaServer(Thread):
     self.port = port
     self.active = True
     self.video_base = VideoBase("/media/archivo_general/Mediateca/Video")
-    self.media_control = vlc.MediaControl()
+    self.media_control = vlc.MediaControl(["--video-x","600","--video-y","50", "--width", "640", "--height","480"]) ## @todo calcular los valores de la posicion de la ventana X11 de vlc respecto de la resolucion de pantalla
     #self.audio_control = gst.element_factory_make("playbin", "player")
     #self.audio_control.set_property("uri", "file://" + "/media/archivo_general/Mediateca/Audio/coleccion/Amy Mcdonald - This Is The Life.mp3")
     #self.audio_control.set_state(gst.STATE_PLAYING)
@@ -44,6 +49,8 @@ class MediatecaServer(Thread):
     12: self.stop,
     13: self.getPos,
     14: self.setPos,
+    15: self.reload,
+    16: self.addFromDir
     }
     
     Thread.__init__(self)
@@ -99,7 +106,7 @@ class MediatecaServer(Thread):
           errCode, response = self.operations.get(msgid, self.defaultOp)(clisk, data)
           json = ""
           if response:
-            json = simplejson.dumps(response).encode("utf-8")
+            json = zipfile.zlib.compress(simplejson.dumps(response).encode("utf-8"))
             clisk.send(struct.pack("!hi",errCode,len(json)))
             clisk.send(json)
           else:
@@ -108,8 +115,8 @@ class MediatecaServer(Thread):
         except socket.error, e:
           print str(e)
           if e[0] == 10054 or e[0] == 104:
-            clisk = None
             incoming.remove(clisk)
+            clisk = None
             continue
           else:
             incoming.remove(clisk)
@@ -119,7 +126,7 @@ class MediatecaServer(Thread):
           print e
           servsk.close()
           incoming.remove(clisk)
-          return
+          continue
           
       
     for cli in incoming:
@@ -141,6 +148,10 @@ class MediatecaServer(Thread):
     self.media_control.set_mrl(nn)
     self.media_control.start()
     return (1, nn)
+    
+  def reload(self, clisk, data):
+    self.playlist = self.video_base.getPlaylistAll()
+    return (1, None)
     
   def prevVideo(self, clisk, data):
     self.media_control.stop()
@@ -208,12 +219,21 @@ class MediatecaServer(Thread):
     
   def getPos(self, clisk, data):
     pos = self.media_control.get_media_position(0,0)
-    return (1,pos.value)
+    return (1, pos.value)
         
   def setPos(self, clisk, data):
     pos = struct.unpack("!i",data)[0]
     self.media_control.set_media_position(pos)
-    return (1,None)        
+    return (1, None)    
+
+  def addFromDir(self, clisk, data):
+    len = struct.unpack("!i",data[:sizeof(c_int)])[0]
+    dir = data[sizeof(c_int):len+sizeof(c_int)].encode("utf-8")
+    if exists(dir):
+      self.playlist.addFromDir(dir)
+      return (1, None)
+    else:
+      return (0, "Directory not found")
     
   def security(self, clisk, address):
     return True

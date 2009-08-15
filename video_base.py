@@ -1,6 +1,8 @@
 from os import listdir, walk
 from os.path import join, exists, isdir
 
+extensions = [".wmv", ".avi", ".ogm", ".mkv"]
+
 class Playlist:
         def __init__(self, files):
                 self.files = files
@@ -33,22 +35,29 @@ class Playlist:
         def count(self):
                 return len(self.files)
 
+	def addFromDir(self, dir):
+		for root, dirs, files in walk(dir):
+			for fname in files:
+				if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
+					self.files.append(join(root, fname))
+
 class VideoBase:
-        
-        extensions = [".wmv", ".avi", ".ogm"]
         
         def __init__(self, dir):
                 self.dir = dir
                 
                 self.files = []
                 self.metadata = []
-                
+                                                        
+        def _load(self, dir):
+                self.files = []
                 for root, dirs, files in walk(dir):
                         for fname in files:
-                                if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), VideoBase.extensions)):
+                                if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
                                         self.files.append(join(root, fname))
-
+                
         def getPlaylistAll(self):
+                self._load(self.dir)
                 return Playlist(self.files)
                 
 def get_meta(fname):
