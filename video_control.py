@@ -5,11 +5,19 @@ from threading import Thread
 from select import select
 
 from video_base import VideoBase
-import vlc
 
-import pygst
-pygst.require("0.10")
-import gst
+import platform
+
+uname = platform.system() 
+
+if uname == "Windows":
+    from pyvlc import vlc
+elif uname == "Linux":
+    import vlc
+
+#import pygst
+#pygst.require("0.10")
+#import gst
 
 from ctypes import *
 from os.path import exists
