@@ -1,4 +1,6 @@
-import socket
+from exceptions import Exception
+
+import bluetooth as bt
 import struct
 import simplejson
 from threading import Thread
@@ -22,10 +24,20 @@ class RPCServer(Thread):
     self.operations[key] = handler
     
   def run(self):
-    servsk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    servsk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    servsk = bt.BluetoothSocket( bt.RFCOMM )
+    
+    #servsk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     servsk.bind(("", self.port))
     servsk.listen(10)
+    
+    uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+
+    bt.advertise_service( servsk, "RPC BT Server",
+                   service_id = uuid,
+                   service_classes = [ uuid, bt.SERIAL_PORT_CLASS ],
+                   profiles = [ bt.SERIAL_PORT_PROFILE ], 
+                   # protocols = [ OBEX_UUID ] 
+                    )
     
     clisk = None
     addr = None
@@ -58,15 +70,11 @@ class RPCServer(Thread):
           else:
             incoming.remove(clisk)
             break
-        except socket.error, e:
-          print e
-          if e[0] == 10054 or e[0] == 104:
-            incoming.remove(clisk)
-            continue
-          else:
-            incoming.remove(clisk)
-            servsk.close()
-            return
+        except Exception, e:
+          print str(e)
+           
+          incoming.remove(clisk)
+          continue
           
         try:
           errCode, response = self.operations.get(msgid, self.defaultOp)(clisk, data)
@@ -78,19 +86,10 @@ class RPCServer(Thread):
           else:
             clisk.send(struct.pack("!hi",errCode,0))
             
-        except socket.error, e:
-          print str(e)
-          if e[0] == 10054 or e[0] == 104:
-            incoming.remove(clisk)
-            clisk = None
-            continue
-          else:
-            incoming.remove(clisk)
-            servsk.close()
-            raise e
         except Exception, e:
-          print e
-          servsk.close()
+          ## @todo GESTIONAR LAS EXCEPCIONES DE DESCONEXION DEL PAR FRENTE A OTRAS
+          print str(e)
+           
           incoming.remove(clisk)
           continue
       

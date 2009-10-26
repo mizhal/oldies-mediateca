@@ -1,5 +1,4 @@
 #! /usr/bin/python
-from video_control import MediatecaServer
+from MediatecaServer import MediatecaServer
 
 server = MediatecaServer()
-server.start()
