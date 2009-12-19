@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="A" >
+    <file>Folder Yellow Video 1.ico</file>
+    <file>Internet.ico</file>
+    <file>Digital Camera - Pictures.ico</file>
+    <file>Video 2.ico</file>
+    <file>Music Player 4.ico</file>
+    <file>eMail.ico</file>
+    <file>tve1logo.jpg</file>
+  </qresource>
+</RCC>

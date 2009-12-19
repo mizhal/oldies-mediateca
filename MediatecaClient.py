@@ -5,6 +5,9 @@ import zipfile
 
 from exceptions import Exception
 
+## constantes identificadoras de operacion
+from op_constants import *
+
 class CannotConnect(Exception):
   def __init__(self, msg):
     self.msg = msg
@@ -87,8 +90,8 @@ class MediatecaClient:
     msg = struct.pack("!hhii",9,8,start,end)
     return self._communicate(msg)
       
-  def stop(self):
-    msg = struct.pack("!hh",12,0)
+  def shutdown(self):
+    msg = struct.pack("!hh",SHUTDOWN,0)
     return self._communicate(msg)
       
   def sort(self):
@@ -109,4 +112,13 @@ class MediatecaClient:
         
   def setPosition(self, pos):
     msg = struct.pack("!hhi", 14, 4, pos)
+    return self._communicate(msg)
+
+  def getStreamLength(self):
+    msg = struct.pack("!hh", STREAM_LENGTH, 0)
+    return self._communicate(msg)
+
+  def addFromDir(self, dir):
+    msg = struct.pack("!hhi", ADD_FROM_DIR, 4+len(dir), len(dir))
+    msg += dir.decode('utf8')
     return self._communicate(msg)

@@ -10,18 +10,20 @@ from ctypes import *
 
 import zipfile
 
+from op_constants import MULTIENGINE
+
 class RPCServer(Thread):
   
-  def __init__(self, port = 16667):
+  def __init__(self, max_engines = 10, port = 16667):
     self.port = port
     self.active = True
     
-    self.operations = {}
+    self.operations = [{} for i in range(max_engines)]
     
     Thread.__init__(self)
     
-  def setOp(self, key, handler):
-    self.operations[key] = handler
+  def setOp(self, engine_id, key, handler):
+    self.operations[engine_id][key] = handler
     
   def run(self):
     servsk = bt.BluetoothSocket( bt.RFCOMM )
@@ -44,6 +46,9 @@ class RPCServer(Thread):
     devnull = None
     devnull2 = None
     incoming = [servsk]
+
+    opcode = None
+    engine_id = 0
     
     while self.active:
       ok_incoming, devnull, devnull2 = select(incoming, [], [], 2)
@@ -63,7 +68,12 @@ class RPCServer(Thread):
         try:
           header = clisk.recv(4)
           if len(header) > 0:
-            msgid, datalen = struct.unpack("!hh",header)
+            opcode, datalen = struct.unpack("!hh",header)
+            engine_id = 0
+            if opcode == MULTIENGINE:
+              engine_id = datalen
+              header = clisk.recv(4)
+              opcode, datalen = struct.unpack("!hh",header)
             data = None
             if datalen:
               data = clisk.recv(datalen)
@@ -77,7 +87,7 @@ class RPCServer(Thread):
           continue
           
         try:
-          errCode, response = self.operations.get(msgid, self.defaultOp)(clisk, data)
+          errCode, response = self.operations[engine_id].get(opcode, self.defaultOp)(clisk, data)
           json = ""
           if response:
             json = zipfile.zlib.compress(simplejson.dumps(response).encode("utf-8"))

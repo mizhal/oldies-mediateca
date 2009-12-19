@@ -17,9 +17,9 @@ import struct
 
 from video_base import VideoBase
 
-#import pygst
-#pygst.require("0.10")
-#import gst
+import pygst
+pygst.require("0.10")
+import gst
 
 ## comunicaciones
 import socket_rpc.server as socket_rpc
@@ -34,59 +34,61 @@ class MediatecaServer:
     self.active = True
     self.video_base = VideoBase("/media/archivo_general/Mediateca/Video")
     self.media_control = vlc.MediaControl(["--video-x","600","--video-y","50", "--width", "640", "--height","480"])
-    #self.audio_control = gst.element_factory_make("playbin", "player")
-    #self.audio_control.set_property("uri", "file://" + "/media/archivo_general/Mediateca/Audio/coleccion/Amy Mcdonald - This Is The Life.mp3")
-    #self.audio_control.set_state(gst.STATE_PLAYING)
+    self.audio_control = gst.element_factory_make("playbin", "player")
+    self.audio_control.set_property("uri", "http://svmedios.serverroom.us:9206/listen")#"file://" + "/media/archivo_general/Mediateca/Audio/coleccion/Amy Mcdonald - This Is The Life.mp3")
+    self.audio_control.set_state(gst.STATE_PLAYING)
 
     self.playlist = self.video_base.getPlaylistAll()
     
     ### endpoint-servidor de comunicaciones
     ## Socket AF_INET, TCP
-    self.rpc = socket_rpc.RPCServer(port)
+    self.rpc = socket_rpc.RPCServer(1, port)
     
     ### DICCIONARIO DE OPERACIONES
-    self.rpc.setOp(MIRROR, self.mirror)
-    self.rpc.setOp(NEXT_VIDEO, self.nextVideo)
-    self.rpc.setOp(PREV_VIDEO, self.prevVideo)
-    self.rpc.setOp(PAUSE, self.pause)
-    self.rpc.setOp(PLAY, self.play)
-    self.rpc.setOp(ADVANCE, self.advance)
-    self.rpc.setOp(REWIND, self.rewind)
-    self.rpc.setOp(JUMP_TO, self.jumpTo)
-    self.rpc.setOp(FULLSCREEN, self.fullscreen)
-    self.rpc.setOp(GET_PLAYLIST, self.getPlaylist)
-    self.rpc.setOp(SORT, self.sort)
-    self.rpc.setOp(LENGTH, self.length)
-    self.rpc.setOp(STOP, self.stop)
-    self.rpc.setOp(GET_POS, self.getPos)
-    self.rpc.setOp(SET_POS, self.setPos)
-    self.rpc.setOp(RELOAD, self.reload)
-    self.rpc.setOp(ADD_FROM_DIR, self.addFromDir)
+    self.rpc.setOp(0, MIRROR, self.mirror)
+    self.rpc.setOp(0, NEXT_VIDEO, self.nextVideo)
+    self.rpc.setOp(0, PREV_VIDEO, self.prevVideo)
+    self.rpc.setOp(0, PAUSE, self.pause)
+    self.rpc.setOp(0, PLAY, self.play)
+    self.rpc.setOp(0, ADVANCE, self.advance)
+    self.rpc.setOp(0, REWIND, self.rewind)
+    self.rpc.setOp(0, JUMP_TO, self.jumpTo)
+    self.rpc.setOp(0, FULLSCREEN, self.fullscreen)
+    self.rpc.setOp(0, GET_PLAYLIST, self.getPlaylist)
+    self.rpc.setOp(0, SORT, self.sort)
+    self.rpc.setOp(0, LENGTH, self.length)
+    self.rpc.setOp(0, SHUTDOWN, self.stop)
+    self.rpc.setOp(0, GET_POS, self.getPos)
+    self.rpc.setOp(0, SET_POS, self.setPos)
+    self.rpc.setOp(0, RELOAD, self.reload)
+    self.rpc.setOp(0, ADD_FROM_DIR, self.addFromDir)
+    self.rpc.setOp(0, STREAM_LENGTH, self.streamLength)
     
     self.rpc.start()
     
     ### endpoint-servidor de comunicaciones
     ## Bluetooth RFCOMM
-    self.bt_rpc = bt_rpc.RPCServer(port+2)
+    self.bt_rpc = bt_rpc.RPCServer(1, port+2)
     
     ### DICCIONARIO DE OPERACIONES
-    self.bt_rpc.setOp(MIRROR, self.mirror)
-    self.bt_rpc.setOp(NEXT_VIDEO, self.nextVideo)
-    self.bt_rpc.setOp(PREV_VIDEO, self.prevVideo)
-    self.bt_rpc.setOp(PAUSE, self.pause)
-    self.bt_rpc.setOp(PLAY, self.play)
-    self.bt_rpc.setOp(ADVANCE, self.advance)
-    self.bt_rpc.setOp(REWIND, self.rewind)
-    self.bt_rpc.setOp(JUMP_TO, self.jumpTo)
-    self.bt_rpc.setOp(FULLSCREEN, self.fullscreen)
-    self.bt_rpc.setOp(GET_PLAYLIST, self.getPlaylist)
-    self.bt_rpc.setOp(SORT, self.sort)
-    self.bt_rpc.setOp(LENGTH, self.length)
-    self.bt_rpc.setOp(STOP, self.stop)
-    self.bt_rpc.setOp(GET_POS, self.getPos)
-    self.bt_rpc.setOp(SET_POS, self.setPos)
-    self.bt_rpc.setOp(RELOAD, self.reload)
-    self.bt_rpc.setOp(ADD_FROM_DIR, self.addFromDir)
+    self.bt_rpc.setOp(0, MIRROR, self.mirror)
+    self.bt_rpc.setOp(0, NEXT_VIDEO, self.nextVideo)
+    self.bt_rpc.setOp(0, PREV_VIDEO, self.prevVideo)
+    self.bt_rpc.setOp(0, PAUSE, self.pause)
+    self.bt_rpc.setOp(0, PLAY, self.play)
+    self.bt_rpc.setOp(0, ADVANCE, self.advance)
+    self.bt_rpc.setOp(0, REWIND, self.rewind)
+    self.bt_rpc.setOp(0, JUMP_TO, self.jumpTo)
+    self.bt_rpc.setOp(0, FULLSCREEN, self.fullscreen)
+    self.bt_rpc.setOp(0, GET_PLAYLIST, self.getPlaylist)
+    self.bt_rpc.setOp(0, SORT, self.sort)
+    self.bt_rpc.setOp(0, LENGTH, self.length)
+    self.bt_rpc.setOp(0, SHUTDOWN, self.stop)
+    self.bt_rpc.setOp(0, GET_POS, self.getPos)
+    self.bt_rpc.setOp(0, SET_POS, self.setPos)
+    self.bt_rpc.setOp(0, RELOAD, self.reload)
+    self.bt_rpc.setOp(0, ADD_FROM_DIR, self.addFromDir)
+    self.bt_rpc.setOp(0, STREAM_LENGTH, self.streamLength)
     
     self.bt_rpc.start()
     
@@ -139,16 +141,18 @@ class MediatecaServer:
     return (1, None)
     
   def advance(self, clisk, data):
+    ''' IMPORTANTE: set_media_position funciona con relacion
+    al instante actual, no en posiciones absolutas'''
+    self.media_control.set_media_position(5000)
     pos = self.media_control.get_media_position(0,0)
-    pos.value += 5000
-    self.media_control.set_media_position(pos)
     
     return (1,pos.value)
     
   def rewind(self, clisk, data):
+    ''' IMPORTANTE: set_media_position funciona con relacion
+    al instante actual, no en posiciones absolutas'''
+    self.media_control.set_media_position(-5000)
     pos = self.media_control.get_media_position(0,0)
-    pos.value -= 5000
-    self.media_control.set_media_position(pos)
     
     return (1,pos.value)
     
@@ -178,8 +182,9 @@ class MediatecaServer:
     return (1, pos.value)
         
   def setPos(self, clisk, data):
-    pos = struct.unpack("!i",data)[0]
-    self.media_control.set_media_position(pos)
+    curr = self.media_control.get_media_position(0,0).value
+    pos = struct.unpack("!i",data)[0];
+    self.media_control.set_media_position(pos - curr)
     return (1, None)    
 
   def addFromDir(self, clisk, data):
@@ -190,6 +195,10 @@ class MediatecaServer:
       return (1, None)
     else:
       return (0, "Directory not found")
-    
+  
+  def streamLength(self, clisk, data):
+    media_length = self.media_control.get_stream_information()['length']
+    return (1, media_length)	
+
   def security(self, clisk, address):
     return True
