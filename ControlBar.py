@@ -53,7 +53,16 @@ class ControlBar(QtGui.QFrame):
 	def showInternet(self):
 		allwin = self.wm.getWindows()
 		self.windows = select_mediateca_windows(allwin)
-		self.wm.setDimensions(self.windows.firefox, 150, 0, self.width - 150, self.height)
+		if self.windows.firefox is None:
+			popen2("firefox")
+		while self.windows.firefox is None:
+			allwin = self.wm.getWindows()
+			self.windows = select_mediateca_windows(allwin)
+		x,y,w,h = self.wm.getDimensions(self.windows.firefox)
+		while x!=150 or y!=0 or w!=self.width-150 or h!=self.height:
+			self.wm.setDimensions(self.windows.firefox, 150, 0, self.width - 150, self.height)
+			x,y,w,h = self.wm.getDimensions(self.windows.firefox)
+
 		self.wm.toTop(self.windows.firefox)		
 		self.windows.firefox.set_input_focus(X.RevertToNone, 0)
 	
