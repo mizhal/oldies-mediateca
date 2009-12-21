@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -z "$1" ] ; then
+    echo "Usage: $0 VOL"
+    echo "       where VOL is an integer from 0 thru 65535"
+    exit 1
+fi
+
+exec pacmd << ! > /dev/null 2>&1
+set-sink-mute 0 0
+set-sink-volume 0 $1
+!

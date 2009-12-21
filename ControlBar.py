@@ -1,3 +1,5 @@
+from popen2 import popen2
+
 from ui.BarUI import Ui_Frame
 
 from PyQt4 import QtCore, QtGui
@@ -35,7 +37,16 @@ class ControlBar(QtGui.QFrame):
 	def showVideo(self):
 		allwin = self.wm.getWindows()
 		self.windows = select_mediateca_windows(allwin)
-		self.wm.setDimensions(self.windows.tv, 150, 0, self.width - 150, self.height)
+		if self.windows.tv is None:
+			popen2("tvtime-sound")
+		while self.windows.tv is None:
+			allwin = self.wm.getWindows()
+			self.windows = select_mediateca_windows(allwin)
+		x,y,w,h = self.wm.getDimensions(self.windows.tv)
+		while x!=150 or y!=0 or w!=self.width-150 or h!=self.height:
+			self.wm.setDimensions(self.windows.tv, 150, 0, self.width - 150, self.height)
+			x,y,w,h = self.wm.getDimensions(self.windows.tv)
+
 		self.wm.toTop(self.windows.tv)		
 		self.windows.tv.set_input_focus(X.RevertToNone, 0)
 		
@@ -60,7 +71,7 @@ class ControlBar(QtGui.QFrame):
 				self.windows = select_mediateca_windows(allwin)
 				
 				end = 1
-				for win in [self.windows.tv, self.windows.audio, self.windows.firefox, self.windows.mixer]:
+				for win in [self.windows.audio, self.windows.firefox, self.windows.mixer]:
 					if win is None:
 						end = 0
 					else:
@@ -78,4 +89,5 @@ if __name__ == "__main__":
     Frame = ControlBar()
     Frame.show()
     Frame.verifyWindowSizes()
+    Frame.showVideo()
     sys.exit(app.exec_())
