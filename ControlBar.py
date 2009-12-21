@@ -52,6 +52,22 @@ class ControlBar(QtGui.QFrame):
 		self.wm.setDimensions(self.windows.mixer, 150, 0, self.width - 150, self.height)
 		self.wm.toTop(self.windows.mixer)
 		self.windows.mixer.set_input_focus(X.RevertToNone, 0)
+		
+	def verifyWindowSizes(self):
+		end = 0
+		while end != 1:
+				allwin = self.wm.getWindows()
+				self.windows = select_mediateca_windows(allwin)
+				
+				end = 1
+				for win in [self.windows.tv, self.windows.audio, self.windows.firefox, self.windows.mixer]:
+					if win is None:
+						end = 0
+					else:
+						x,y,w,h = self.wm.getDimensions(win)
+						if x != 150 or y !=0 or w != self.width - 150 or h != self.height:
+							self.wm.setDimensions(win, 150, 0, self.width - 150, self.height)
+							end = 0
 	
 from time import sleep
 from exceptions import Exception
@@ -61,18 +77,5 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     Frame = ControlBar()
     Frame.show()
-
-    end = 0
-    while end != 1: 
-    	try:
-    		Frame.showAudio()
-    		Frame.showInternet()
-    		Frame.showVideo()
-		Frame.showMixer()
-    		sleep(1)
-    		end = 1
-    	except Exception, e:
-    		print e
-    		pass
-	
+    Frame.verifyWindowSizes()
     sys.exit(app.exec_())

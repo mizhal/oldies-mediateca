@@ -32,6 +32,11 @@ class MicroManager:
 		window.configure(x = x, y = y, width = width, height = height)
 		self.display.sync()		
 		
+	def getDimensions(self, window):
+		'''returns (x, y, width, height)'''
+		geom = window.get_geometry()
+		return (geom.x, geom.y, geom.width, geom.height)
+		
 	def screenSize(self, screen_number = 0):
 		screen = self.display.screen(screen_number)
 		return (screen.width_in_pixels, screen.height_in_pixels) 
