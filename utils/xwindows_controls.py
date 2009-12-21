@@ -43,6 +43,8 @@ class MediatecaWindows:
 	video = None
 	audio = None
 	firefox = None
+	tv = None
+	mixer = None
 
 import re
 
@@ -55,6 +57,9 @@ def select_mediateca_windows(win_dict):
 			desired_windows.audio = j
 		if i.endswith("Mozilla Firefox"):
 			desired_windows.firefox = j
-	
-	return desired_windows
+		if i.startswith("tvtime"):
+			desired_windows.tv = j
+		if i.startswith("Volume Control"):
+			desired_windows.mixer = j	
 
+	return desired_windows
