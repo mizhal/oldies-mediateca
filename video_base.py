@@ -52,7 +52,7 @@ class VideoBase:
         def _load(self, dirs):
                 for dir in dirs:
                     self.files = []
-                    for root, dirs, files in walk(dir):
+                    for root, direcs, files in walk(dir):
                         for fname in files:
                             if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
                                 self.files.append(join(root, fname))
