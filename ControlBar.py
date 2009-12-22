@@ -1,10 +1,44 @@
 from popen2 import popen2
+import weakref
 
 from ui.BarUI import Ui_Frame
 
 from PyQt4 import QtCore, QtGui
 
-from utils.xwindows_controls import MicroManager, select_mediateca_windows, X
+from utils.xwindows_controls import MicroManager, X
+
+#############################
+## identificacion de las ventanas de mediateca
+#############################
+class MediatecaWindows:
+	video = None
+	audio = None
+	internet = None
+	mail = None
+	tv = None
+	mixer = None
+	cd_writer = None
+	terminal = None
+
+import re
+
+def select_mediateca_windows(win_dict):
+	desired_windows = MediatecaWindows()
+	for i,j in win_dict.iteritems():
+		if i.startswith("VLC"):
+			desired_windows.video = j
+		if i.startswith("Brasero"):
+			desired_windows.cd_writer = j
+		if re.match(".*Sonata.*", i) != None:
+			desired_windows.audio = j
+		if i.endswith("Mozilla Firefox"):
+			desired_windows.firefox = j
+		if i.startswith("tvtime"):
+			desired_windows.tv = j
+		if i.startswith("Volume Control"):
+			desired_windows.mixer = j	
+
+	return desired_windows
 
 class ControlBar(QtGui.QFrame):
 	def __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
@@ -23,56 +57,72 @@ class ControlBar(QtGui.QFrame):
 		QtCore.QObject.connect (self.ui.audio, QtCore.SIGNAL ("clicked()"), self.showAudio)
 		QtCore.QObject.connect (self.ui.video, QtCore.SIGNAL ("clicked()"), self.showVideo)
 		QtCore.QObject.connect (self.ui.internet, QtCore.SIGNAL ("clicked()"), self.showInternet)
-		QtCore.QObject.connect (self.ui.mail, QtCore.SIGNAL ("clicked()"), self.showMixer)
+		QtCore.QObject.connect (self.ui.mixer, QtCore.SIGNAL ("clicked()"), self.showMixer)
+		QtCore.QObject.connect (self.ui.terminal, QtCore.SIGNAL ("clicked()"), self.showTerminal)
+		QtCore.QObject.connect (self.ui.cd_writer, QtCore.SIGNAL ("clicked()"), self.showCDWriter)
 
 		end = 0
+		
+		self._pages_cache = weakref.WeakValueDictionary()
+		
+	def _showAsPage(self, name, win_match_fun, executable):
 
-	def showAudio(self):
-		allwin = self.wm.getWindows()
-		self.windows = select_mediateca_windows(allwin)
-		self.wm.setDimensions(self.windows.audio, 150, 0, self.width - 150, self.height)
-		self.wm.toTop(self.windows.audio)
-		self.windows.audio.set_input_focus(X.RevertToNone, 0)
+		if not self._pages_cache.has_key(name):
+			for name, window in self.wm.getWindows():
+				if win_match_fun(name):
+					self._pages_cache[name] = window
+					break
+		
+		winpage = self._pages_cache.get(name, none)
+				
+		if winpage is None:
+			if executable is None:
+				return
+			else:
+				popen2(executable)
+		while winpage is None:
+			for name, window in self.wm.getWindows():
+				if win_match_fun(name):
+					winpage = window
+					self._pages_cache[name] = window
+					break
+					
+		x,y,w,h = self.wm.getDimensions(winpage)
+		while x!=150 or y!=0 or w!=self.width-150 or h!=self.height:
+			self.wm.setDimensions(winpage, 150, 0, self.width - 150, self.height)
+			x,y,w,h = self.wm.getDimensions(winpage)
+
+		self.wm.toTop(winpage)		
+		winpage.set_input_focus(X.RevertToNone, 0)
 		
 	def showVideo(self):
-		allwin = self.wm.getWindows()
-		self.windows = select_mediateca_windows(allwin)
-		if self.windows.tv is None:
-			popen2("tvtime-sound")
-		while self.windows.tv is None:
-			allwin = self.wm.getWindows()
-			self.windows = select_mediateca_windows(allwin)
-		x,y,w,h = self.wm.getDimensions(self.windows.tv)
-		while x!=150 or y!=0 or w!=self.width-150 or h!=self.height:
-			self.wm.setDimensions(self.windows.tv, 150, 0, self.width - 150, self.height)
-			x,y,w,h = self.wm.getDimensions(self.windows.tv)
-
-		self.wm.toTop(self.windows.tv)		
-		self.windows.tv.set_input_focus(X.RevertToNone, 0)
+		win_match = lambda name: name.startswith("VLC")
+		self._showAsPage('video',win_match, None)
+		
+	def showAudio(self):
+		win_match = lambda name: re.match(".*Sonata.*", name) != None
+		self._showAsPage('audio',win_match, "sonata")
+		
+	def showTV(self):
+		win_match = lambda name: name.startswith("tvtime")
+		self._showAsPage('tv',win_match, "tvtime")
 		
 	def showInternet(self):
-		allwin = self.wm.getWindows()
-		self.windows = select_mediateca_windows(allwin)
-		if self.windows.firefox is None:
-			popen2("firefox")
-		while self.windows.firefox is None:
-			allwin = self.wm.getWindows()
-			self.windows = select_mediateca_windows(allwin)
-		x,y,w,h = self.wm.getDimensions(self.windows.firefox)
-		while x!=150 or y!=0 or w!=self.width-150 or h!=self.height:
-			self.wm.setDimensions(self.windows.firefox, 150, 0, self.width - 150, self.height)
-			x,y,w,h = self.wm.getDimensions(self.windows.firefox)
-
-		self.wm.toTop(self.windows.firefox)		
-		self.windows.firefox.set_input_focus(X.RevertToNone, 0)
+		win_match = lambda name: name.endswith("Mozilla Firefox")
+		self._showAsPage('internet',win_match, "firefox")
 	
 	def showMixer(self):
-		allwin = self.wm.getWindows()
-		self.windows = select_mediateca_windows(allwin)
-		self.wm.setDimensions(self.windows.mixer, 150, 0, self.width - 150, self.height)
-		self.wm.toTop(self.windows.mixer)
-		self.windows.mixer.set_input_focus(X.RevertToNone, 0)
+		win_match = lambda name: name.startswith("Volume Control")
+		self._showAsPage('mixer',win_match, "pavucontrol")
+
+	def showCDWriter(self):
+		win_match = lambda name: name.startswith("Brasero")
+		self._showAsPage('cd_writer',win_match, "brasero")
 		
+	def showTerminal(self):
+		win_match = lambda name: name.startswith("mediateca-terminal")
+		self._showAsPage('terminal',win_match, 'xterm -t T "mediateca-terminal" -fg white -bg black')
+
 	def verifyWindowSizes(self):
 		end = 0
 		while end != 1:
@@ -97,6 +147,6 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     Frame = ControlBar()
     Frame.show()
-    Frame.verifyWindowSizes()
-    Frame.showVideo()
+    #Frame.verifyWindowSizes()
+    #Frame.showVideo()
     sys.exit(app.exec_())

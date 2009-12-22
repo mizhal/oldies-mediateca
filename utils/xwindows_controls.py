@@ -39,32 +39,4 @@ class MicroManager:
 		
 	def screenSize(self, screen_number = 0):
 		screen = self.display.screen(screen_number)
-		return (screen.width_in_pixels, screen.height_in_pixels) 
-
-#############################
-## identificacion de las ventanas de mediateca
-#############################
-class MediatecaWindows:
-	video = None
-	audio = None
-	firefox = None
-	tv = None
-	mixer = None
-
-import re
-
-def select_mediateca_windows(win_dict):
-	desired_windows = MediatecaWindows()
-	for i,j in win_dict.iteritems():
-		if i.startswith("VLC"):
-			desired_windows.video = j
-		if re.match(".*Sonata.*", i) != None:
-			desired_windows.audio = j
-		if i.endswith("Mozilla Firefox"):
-			desired_windows.firefox = j
-		if i.startswith("tvtime"):
-			desired_windows.tv = j
-		if i.startswith("Volume Control"):
-			desired_windows.mixer = j	
-
-	return desired_windows
+		return (screen.width_in_pixels, screen.height_in_pixels)
