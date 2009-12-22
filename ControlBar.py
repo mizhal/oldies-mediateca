@@ -15,8 +15,6 @@ class ControlBar(QtGui.QFrame):
 		self.ui.setupUi(self)
 		
 		self.wm = MicroManager()
-		allwin = self.wm.getWindows()
-		self.windows = select_mediateca_windows(allwin)
 		
 		self.current = None
 		self.width, self.height = self.wm.screenSize()
@@ -89,22 +87,6 @@ class ControlBar(QtGui.QFrame):
 	def showTerminal(self):
 		win_match = lambda name: name.startswith("mediateca-terminal")
 		self._showAsPage('terminal',win_match, 'xterm -t T "mediateca-terminal" -fg white -bg black')
-
-	def verifyWindowSizes(self):
-		end = 0
-		while end != 1:
-				allwin = self.wm.getWindows()
-				self.windows = select_mediateca_windows(allwin)
-				
-				end = 1
-				for win in [self.windows.audio, self.windows.firefox, self.windows.mixer]:
-					if win is None:
-						end = 0
-					else:
-						x,y,w,h = self.wm.getDimensions(win)
-						if x != 150 or y !=0 or w != self.width - 150 or h != self.height:
-							self.wm.setDimensions(win, 150, 0, self.width - 150, self.height)
-							end = 0
 	
 from time import sleep
 from exceptions import Exception
