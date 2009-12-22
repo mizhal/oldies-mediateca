@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Bar.ui'
 #
-# Created: Sat Dec 19 06:56:12 2009
+# Created: Tue Dec 22 01:58:28 2009
 #      by: PyQt4 UI code generator 4.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,7 +57,7 @@ class Ui_Frame(object):
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/A/eMail.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mail.setIcon(icon1)
-        self.mail.setIconSize(QtCore.QSize(150, 150))
+        self.mail.setIconSize(QtCore.QSize(128, 128))
         self.mail.setAutoRepeat(False)
         self.mail.setObjectName("mail")
         self.video = QtGui.QToolButton(Frame)
@@ -76,6 +76,30 @@ class Ui_Frame(object):
         self.internet.setIconSize(QtCore.QSize(150, 150))
         self.internet.setAutoRepeat(False)
         self.internet.setObjectName("internet")
+        self.mixer = QtGui.QToolButton(Frame)
+        self.mixer.setGeometry(QtCore.QRect(0, 600, 71, 71))
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/A/Delete.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mixer.setIcon(icon4)
+        self.mixer.setIconSize(QtCore.QSize(48, 48))
+        self.mixer.setObjectName("mixer")
+        self.cd_writer = QtGui.QToolButton(Frame)
+        self.cd_writer.setGeometry(QtCore.QRect(80, 600, 71, 71))
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/A/CD.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.cd_writer.setIcon(icon5)
+        self.cd_writer.setIconSize(QtCore.QSize(64, 64))
+        self.cd_writer.setObjectName("cd_writer")
+        self.terminal = QtGui.QToolButton(Frame)
+        self.terminal.setGeometry(QtCore.QRect(0, 670, 71, 71))
+        self.terminal.setObjectName("terminal")
+        self.tv = QtGui.QToolButton(Frame)
+        self.tv.setGeometry(QtCore.QRect(80, 670, 71, 71))
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/A/tve1logo.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tv.setIcon(icon6)
+        self.tv.setIconSize(QtCore.QSize(32, 32))
+        self.tv.setObjectName("tv")
 
         self.retranslateUi(Frame)
         QtCore.QMetaObject.connectSlotsByName(Frame)
@@ -86,6 +110,10 @@ class Ui_Frame(object):
         self.mail.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.video.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.internet.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.mixer.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.cd_writer.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.terminal.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.tv.setText(QtGui.QApplication.translate("Frame", "...", None, QtGui.QApplication.UnicodeUTF8))
 
 import Icons_rc
 
