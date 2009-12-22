@@ -7,39 +7,6 @@ from PyQt4 import QtCore, QtGui
 
 from utils.xwindows_controls import MicroManager, X
 
-#############################
-## identificacion de las ventanas de mediateca
-#############################
-class MediatecaWindows:
-	video = None
-	audio = None
-	internet = None
-	mail = None
-	tv = None
-	mixer = None
-	cd_writer = None
-	terminal = None
-
-import re
-
-def select_mediateca_windows(win_dict):
-	desired_windows = MediatecaWindows()
-	for i,j in win_dict.iteritems():
-		if i.startswith("VLC"):
-			desired_windows.video = j
-		if i.startswith("Brasero"):
-			desired_windows.cd_writer = j
-		if re.match(".*Sonata.*", i) != None:
-			desired_windows.audio = j
-		if i.endswith("Mozilla Firefox"):
-			desired_windows.firefox = j
-		if i.startswith("tvtime"):
-			desired_windows.tv = j
-		if i.startswith("Volume Control"):
-			desired_windows.mixer = j	
-
-	return desired_windows
-
 class ControlBar(QtGui.QFrame):
 	def __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
 		QtGui.QFrame.__init__(self, parent, f)
@@ -73,7 +40,7 @@ class ControlBar(QtGui.QFrame):
 					self._pages_cache[name] = window
 					break
 		
-		winpage = self._pages_cache.get(name, none)
+		winpage = self._pages_cache.get(name, None)
 				
 		if winpage is None:
 			if executable is None:
