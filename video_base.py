@@ -50,8 +50,8 @@ class VideoBase:
                 self.metadata = []
                                                         
         def _load(self, dirs):
+                self.files = []
                 for dir in dirs:
-                    self.files = []
                     for root, direcs, files in walk(dir):
                         for fname in files:
                             if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
