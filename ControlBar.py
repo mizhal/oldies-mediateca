@@ -1,5 +1,6 @@
 from popen2 import popen2
 import weakref
+import re
 
 from ui.BarUI import Ui_Frame
 
