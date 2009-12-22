@@ -68,7 +68,7 @@ class ControlBar(QtGui.QFrame):
 	def _showAsPage(self, name, win_match_fun, executable):
 
 		if not self._pages_cache.has_key(name):
-			for name, window in self.wm.getWindows():
+			for name, window in self.wm.getWindows().iteritems():
 				if win_match_fun(name):
 					self._pages_cache[name] = window
 					break
@@ -81,7 +81,7 @@ class ControlBar(QtGui.QFrame):
 			else:
 				popen2(executable)
 		while winpage is None:
-			for name, window in self.wm.getWindows():
+			for name, window in self.wm.getWindows().iteritems():
 				if win_match_fun(name):
 					winpage = window
 					self._pages_cache[name] = window
