@@ -87,7 +87,7 @@ class ControlBar(QtGui.QFrame):
 		
 	def showTerminal(self):
 		win_match = lambda name: name.startswith("mediateca-terminal")
-		self._showAsPage('terminal',win_match, 'xterm -t T "mediateca-terminal" -fg white -bg black')
+		self._showAsPage('terminal',win_match, 'xterm -T "mediateca-terminal" -fg white -bg black')
 	
 from time import sleep
 from exceptions import Exception
