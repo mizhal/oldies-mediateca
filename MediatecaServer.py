@@ -29,10 +29,9 @@ import bt_rpc.server as bt_rpc
 from op_constants import *
 
 class MediatecaServer:
-
   def __init__(self, port = 16667):
     self.active = True
-    self.video_base = VideoBase("/media/archivo_general/Mediateca/Video")
+    self.video_base = VideoBase("/media/archivo_general/Mediateca/Video", "/var/mik6/Puerto/mediateca")
     self.media_control = vlc.MediaControl(["--video-x","600","--video-y","50", "--width", "640", "--height","480"])
     self.audio_control = gst.element_factory_make("playbin", "player")
     self.audio_control.set_property("uri", "http://svmedios.serverroom.us:9206/listen")#"file://" + "/media/archivo_general/Mediateca/Audio/coleccion/Amy Mcdonald - This Is The Life.mp3")

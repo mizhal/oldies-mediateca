@@ -43,18 +43,19 @@ class Playlist:
 
 class VideoBase:
         
-        def __init__(self, dir):
-                self.dir = dir
+        def __init__(self, *dirs):
+                self.dir = dirs
                 
                 self.files = []
                 self.metadata = []
                                                         
-        def _load(self, dir):
-                self.files = []
-                for root, dirs, files in walk(dir):
+        def _load(self, dirs):
+                for dir in dirs:
+                    self.files = []
+                    for root, dirs, files in walk(dir):
                         for fname in files:
-                                if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
-                                        self.files.append(join(root, fname))
+                            if reduce(lambda x,y: x or y, map(lambda x: fname.endswith(x), extensions)):
+                                self.files.append(join(root, fname))
                 
         def getPlaylistAll(self):
                 self._load(self.dir)
