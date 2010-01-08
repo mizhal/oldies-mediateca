@@ -1,0 +1,7 @@
+La funcionalidad de un engine consiste en recibir una lista de reproduccion o eventualmente una MRL(media resource locator) y reproducir dicha lista o medio de manera continua y ordenada.
+
+Se buscará que los engines sean procesos distintos entre si y de los procesos de control remoto y gestion de las colecciones, de tal manera que si se detecta la caida de uno de ellos, no se afecte en lo posible a los demas.
+
+En terminos abstractos, un engine debe conformarse a un interfaz que nos permite 
+conectarlo con el resto del sistema.
+A este interfaz lo denominaremos IEngine y debe comprobarse en tiempo de diseño o de manera estática por el compilador, nunca en tiempo de ejecucion pues no se espera el recambio en caliente de los engines.
