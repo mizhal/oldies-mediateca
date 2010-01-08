@@ -207,8 +207,9 @@ class MediatecaServer:
 		try:
 			self.media_control.set_mrl(mrl)
 			self.media_control.start()
+			return (1, None)
 		except:
-			pass
+			return (0,"MRL no accesible")
 
 	def security(self, clisk, address):
 		return True
