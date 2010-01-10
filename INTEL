@@ -1,0 +1,7 @@
+++ Reorganizacion de la mediateca 
+
+Hay tres tipos de entidades:
+
+Engines - Reproducen el stream
+Controls - Controlan los engines
+Memories - Mantienen las listas y mediatecas clasificadas de Medios, asi como Marcas y configuraciones de usuario respecto de dichos medios.
