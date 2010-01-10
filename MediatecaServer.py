@@ -4,9 +4,9 @@ import platform
 uname = platform.system() 
 
 if uname == "Windows":
-        from pyvlc import vlc
+    from pyvlc import vlc
 elif uname == "Linux":
-        import vlc
+    import vlc
 
 ## gestion de archivos
 from os.path import exists
@@ -36,12 +36,12 @@ class MediatecaServer:
         self.audio_control = gst.element_factory_make("playbin", "player")
         self.audio_control.set_property("uri", "http://svmedios.serverroom.us:9206/listen")#"file://" + "/media/archivo_general/Mediateca/Audio/coleccion/Amy Mcdonald - This Is The Life.mp3")
         self.audio_control.set_state(gst.STATE_PLAYING)
-    
+        
         self.playlist = self.video_base.getPlaylistAll()
         
         self.rpc = None
         self.bt_rpc = None
-    
+        
         while True:
             if self.rpc is None:
                 self._setSocketRPC(port)
@@ -86,7 +86,7 @@ class MediatecaServer:
         
         self.rpc.start()                
     
-  def _setBTRPC(self, port):    
+    def _setBTRPC(self, port):    
         ### endpoint-servidor de comunicaciones
         ## Bluetooth RFCOMM
         self.bt_rpc = bt_rpc.RPCServer(1, port+2)
