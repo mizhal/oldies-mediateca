@@ -39,6 +39,27 @@ class MediatecaServer:
 
     self.playlist = self.video_base.getPlaylistAll()
     
+    
+    self.rpc = None
+    self.bt_rpc = None
+    
+    while True:
+        if self.rpc is None:
+            self._setSocketRPC(port)
+        else:
+            if not self.rpc.isAlive():
+                self._setSocketRPC(port) 
+                
+        if self.bt_rpc is None:
+            self._setBTRPC(port)
+        else:
+            if not self.bt_rpc.isAlive():
+                self._setBTRPC(port)
+                
+        self.rpc.join(1)
+        self.bt_rpc.join(1)
+            
+  def _setSocketRPC(self, port):
     ### endpoint-servidor de comunicaciones
     ## Socket AF_INET, TCP
     self.rpc = socket_rpc.RPCServer(1, port)
@@ -64,7 +85,8 @@ class MediatecaServer:
     self.rpc.setOp(0, STREAM_LENGTH, self.streamLength)
     
     self.rpc.start()
-    
+
+  def _setBTRPC(self, port):    
     ### endpoint-servidor de comunicaciones
     ## Bluetooth RFCOMM
     self.bt_rpc = bt_rpc.RPCServer(1, port+2)
