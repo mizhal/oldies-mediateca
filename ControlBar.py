@@ -9,7 +9,7 @@ from PyQt4 import QtCore, QtGui
 from utils.xwindows_controls import MicroManager, X
 
 class ControlBar(QtGui.QFrame):
-	d ef __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
+	def __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
 		QtGui.QFrame.__init__(self, parent, f)
 		
 		self.ui = Ui_Frame()
