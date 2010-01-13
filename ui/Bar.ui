@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>150</width>
+    <width>944</width>
     <height>800</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="palette">
    <palette>
@@ -123,7 +129,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/Music Player 4.ico</normaloff>:/A/Music Player 4.ico</iconset>
    </property>
    <property name="iconSize">
@@ -149,7 +155,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/eMail.ico</normaloff>:/A/eMail.ico</iconset>
    </property>
    <property name="iconSize">
@@ -175,7 +181,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/Video 2.ico</normaloff>:/A/Video 2.ico</iconset>
    </property>
    <property name="iconSize">
@@ -201,7 +207,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/Internet.ico</normaloff>:/A/Internet.ico</iconset>
    </property>
    <property name="iconSize">
@@ -227,7 +233,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/Delete.ico</normaloff>:/A/Delete.ico</iconset>
    </property>
    <property name="iconSize">
@@ -250,7 +256,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/CD.ico</normaloff>:/A/CD.ico</iconset>
    </property>
    <property name="iconSize">
@@ -286,7 +292,7 @@
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc">
+    <iconset resource="Icons.qrc">
      <normaloff>:/A/tve1logo.jpg</normaloff>:/A/tve1logo.jpg</iconset>
    </property>
    <property name="iconSize">
@@ -298,7 +304,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../../../../archivo_general/Codigo/local/lib/Python/mediateca/ui/Icons.qrc"/>
+  <include location="Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

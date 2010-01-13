@@ -9,7 +9,7 @@ from PyQt4 import QtCore, QtGui
 from utils.xwindows_controls import MicroManager, X
 
 class ControlBar(QtGui.QFrame):
-	def __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
+	d ef __init__(self,parent=None, f=QtCore.Qt.WindowFlags()):
 		QtGui.QFrame.__init__(self, parent, f)
 		
 		self.ui = Ui_Frame()
@@ -18,7 +18,7 @@ class ControlBar(QtGui.QFrame):
 		self.wm = MicroManager()
 		
 		self.current = None
-		self.width, self.height = self.wm.screenSize()
+		self.width, self.height = self.size()
 		
 		QtCore.QObject.connect (self.ui.audio, QtCore.SIGNAL ("clicked()"), self.showAudio)
 		QtCore.QObject.connect (self.ui.video, QtCore.SIGNAL ("clicked()"), self.showVideo)
