@@ -18,7 +18,8 @@ class ControlBar(QtGui.QFrame):
 		self.wm = MicroManager()
 		
 		self.current = None
-		self.width, self.height = self.size()
+		self.width = 1280 
+		self.height = 800
 		
 		QtCore.QObject.connect (self.ui.audio, QtCore.SIGNAL ("clicked()"), self.showAudio)
 		QtCore.QObject.connect (self.ui.video, QtCore.SIGNAL ("clicked()"), self.showVideo)
@@ -59,7 +60,6 @@ class ControlBar(QtGui.QFrame):
 			x,y,w,h = self.wm.getDimensions(winpage)
 
 		self.wm.toTop(winpage)		
-		winpage.set_input_focus(X.RevertToNone, 0)
 		
 	def showVideo(self):
 		win_match = lambda name: name.startswith("VLC")
